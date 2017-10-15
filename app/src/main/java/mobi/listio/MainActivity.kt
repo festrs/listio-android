@@ -1,5 +1,6 @@
 package mobi.listio
 
+import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.design.widget.NavigationView
@@ -10,8 +11,9 @@ import android.view.Menu
 import android.view.MenuItem
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
+import mobi.listio.model.Item
 
-class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
+class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener, ItemListFragment.OnListFragmentInteractionListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,6 +31,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         toggle.syncState()
 
         nav_view.setNavigationItemSelectedListener(this)
+
+        supportFragmentManager.beginTransaction().add(R.id.main_content, ItemListFragment()).commit()
     }
 
     override fun onBackPressed() {
@@ -80,5 +84,12 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         drawer_layout.closeDrawer(GravityCompat.START)
         return true
+    }
+
+    override fun onListFragmentInteraction(item: Item) {
+        val intent = Intent(this, ItemDetailActivity::class.java)
+        intent.putExtra("INTENT_ITEM_ID", item.id)
+        intent.putExtra("INTENT_ITEM_NAME", item.name)
+        startActivity(intent)
     }
 }
